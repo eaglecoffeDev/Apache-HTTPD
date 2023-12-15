@@ -3,7 +3,7 @@ require 'ipaddr'
 require 'os'
 # Constants
 APACHE_BANNER = "Apache/"
-EIP_OFFSET = 62
+EIP_OFFSET = 62   
 
 def custom_recv_until(s, delimiter)
   data = ""
